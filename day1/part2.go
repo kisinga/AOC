@@ -27,6 +27,7 @@ outside:
 			for _, val := range expenses {
 				if expense+expenses[ii]+val == 2020 {
 					val1, val2, val3 = expense, expenses[ii], val
+					done = true
 					break outside
 				}
 			}
