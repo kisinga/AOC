@@ -33,20 +33,20 @@ func main() {
 
 }
 
-func splitInput(input string) (min, max int, letter byte, pass string) {
+func splitInput(input string) (first, last int, letter byte, pass string) {
 	splits := strings.Split(input, ": ")
 	left := splits[0]
 	pass = splits[1]
 
 	splits2 := strings.Split(left, "-")
 	var err error
-	if min, err = strconv.Atoi(splits2[0]); err != nil {
+	if first, err = strconv.Atoi(splits2[0]); err != nil {
 		log.Fatal(err)
 	}
 	right := splits2[1]
 
 	splits3 := strings.Split(right, " ")
-	if max, err = strconv.Atoi(splits3[0]); err != nil {
+	if last, err = strconv.Atoi(splits3[0]); err != nil {
 		log.Fatal(err)
 	}
 	letter = splits3[1][0]
@@ -54,12 +54,10 @@ func splitInput(input string) (min, max int, letter byte, pass string) {
 	return
 }
 
-func validatePassword(min, max int, letter byte, pass string) bool {
-	count := 0
-	for i := 0; i < len(pass); i++ {
-		if letter == pass[i] {
-			count++
-		}
+func validatePassword(first, last int, letter byte, pass string) bool {
+	if (pass[first-1] == letter && pass[last-1] != letter) || (pass[first-1] != letter && pass[last-1] == letter) {
+		return true
 	}
-	return count >= min && count <= max
+
+	return false
 }
