@@ -19,7 +19,6 @@ const (
 var heighRegex = regexp.MustCompile(`#([0-9a-f]){6}`)
 var eyeColorRegex = regexp.MustCompile(`amb|blu|brn|gry|grn|hzl|oth`)
 var passportIDRegex = regexp.MustCompile(`^[0-9]{9}$`)
-var temp []string
 
 func main() {
 	content, err := ioutil.ReadFile("input.txt")
@@ -35,7 +34,6 @@ func main() {
 		}
 	}
 	fmt.Println(validCount)
-	fmt.Println(temp)
 }
 func validatePassport(passport string) bool {
 	fields := strings.Fields(passport)
@@ -116,7 +114,6 @@ func validatePassport(passport string) bool {
 		case "pid":
 			match := passportIDRegex.MatchString(value)
 			if !match {
-				temp = append(temp, value)
 				return false
 			}
 			validCount++
