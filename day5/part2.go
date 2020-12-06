@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"sort"
 )
 
 func main() {
@@ -18,18 +19,25 @@ func main() {
 	defer f.Close()
 
 	scanner := bufio.NewScanner(f)
-	highestID := 0
-	fmt.Println(getSeatID("FBFBBFFRLR"))
+	ids := []int{}
+
 	for scanner.Scan() {
-		if seatID := getSeatID(scanner.Text()); seatID > highestID {
-			highestID = seatID
-		}
+		ids = append(ids, getSeatID(scanner.Text()))
 	}
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(highestID)
+	missingID := 0
+	sort.Ints(ids)
+	for i, val := range ids {
+		if val+1 != ids[i+1] {
+			missingID = val + 1
+			break
+		}
+	}
+
+	fmt.Println(missingID)
 }
 func getSeatID(line string) int {
 	row, err := getRow(string([]byte(line)[0:7]))
