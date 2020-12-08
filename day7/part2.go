@@ -56,31 +56,6 @@ func countChildren(bags map[string]bag, color string) int {
 	return count
 }
 
-func indirectParents(bags map[string]bag, color string) map[string]bag {
-	indirectRoutes := map[string]bag{}
-	p := parents(bags, color)
-	for _, parent := range p {
-		indirectRoutes[parent.color] = parent
-		for k, v := range indirectParents(bags, parent.color) {
-			indirectRoutes[k] = v
-		}
-	}
-
-	return indirectRoutes
-}
-
-func parents(bags map[string]bag, color string) map[string]bag {
-	found := map[string]bag{}
-	for _, bag := range bags {
-		for _, child := range bag.children {
-			if child.color == color {
-				found[bag.color] = bag
-			}
-		}
-	}
-	return found
-}
-
 func getBag(line string) *bag {
 	split := strings.Split(line, "contain")
 	parent, children := strings.ReplaceAll(split[0], "bags", ""), getChildren(split[1])
