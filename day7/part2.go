@@ -30,52 +30,30 @@ func main() {
 
 	scanner := bufio.NewScanner(f)
 	// make a map so that it's easy to search, just in case
-	bags := make(map[string]*bag)
+	bags := make(map[string]bag)
 	for scanner.Scan() {
 		lineBag := getBag(scanner.Text())
-		bags[lineBag.color] = lineBag
+		bags[lineBag.color] = *lineBag
 	}
 
 	if err := scanner.Err(); err != nil {
 		log.Fatal(err)
 	}
-	directRoutes := parents(bags, "shiny gold")
-	indirectRoutes := map[string]bag{}
-	for key := range directRoutes {
-		for k, v := range indirectParents(bags, key) {
-			indirectRoutes[k] = v
-		}
-	}
-	merged := indirectRoutes
-	for k, v := range directRoutes {
-		merged[k] = v
-	}
-	fmt.Println(len(merged))
+	count := countChildren(bags, "shiny gold")
+
+	fmt.Println(count)
 }
 
-func indirectParents(bags map[string]*bag, color string) map[string]bag {
-	indirectRoutes := map[string]bag{}
-	p := parents(bags, color)
-	for _, parent := range p {
-		indirectRoutes[parent.color] = parent
-		for k, v := range indirectParents(bags, parent.color) {
-			indirectRoutes[k] = v
+func countChildren(bags map[string]bag, color string) int {
+	count := 0
+	for _, v := range bags[color].children {
+		count += v.count
+		for _, child := range bags[v.color].children {
+			count += v.count * child.count
+			count += v.count * countChildren(bags, child.color) * child.count
 		}
 	}
-
-	return indirectRoutes
-}
-
-func parents(bags map[string]*bag, color string) map[string]bag {
-	found := map[string]bag{}
-	for _, bag := range bags {
-		for _, child := range bag.children {
-			if child.color == color {
-				found[bag.color] = *bag
-			}
-		}
-	}
-	return found
+	return count
 }
 
 func getBag(line string) *bag {
