@@ -30,9 +30,9 @@ func main() {
 
 	scanner := bufio.NewScanner(f)
 	// make a map so that it's easy to search, just in case
-	bags := make(map[string]*bag)
+	bags := make(map[string]bag)
 	for scanner.Scan() {
-		lineBag := getBag(scanner.Text())
+		lineBag := *getBag(scanner.Text())
 		bags[lineBag.color] = lineBag
 	}
 
@@ -53,7 +53,7 @@ func main() {
 	fmt.Println(len(merged))
 }
 
-func indirectParents(bags map[string]*bag, color string) map[string]bag {
+func indirectParents(bags map[string]bag, color string) map[string]bag {
 	indirectRoutes := map[string]bag{}
 	p := parents(bags, color)
 	for _, parent := range p {
@@ -66,12 +66,12 @@ func indirectParents(bags map[string]*bag, color string) map[string]bag {
 	return indirectRoutes
 }
 
-func parents(bags map[string]*bag, color string) map[string]bag {
+func parents(bags map[string]bag, color string) map[string]bag {
 	found := map[string]bag{}
 	for _, bag := range bags {
 		for _, child := range bag.children {
 			if child.color == color {
-				found[bag.color] = *bag
+				found[bag.color] = bag
 			}
 		}
 	}
