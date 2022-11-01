@@ -76,7 +76,7 @@ func extractLine(l string) line {
 }
 func run(index int, l *line, lines []line) {
 	newIndex, err := executeLine(index, l)
-	if err!= nil{
+	if err != nil {
 		return
 	}
 	run(newIndex, &lines[newIndex], lines)
