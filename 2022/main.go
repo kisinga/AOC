@@ -1,5 +1,9 @@
 package main
 
+import (
+	. "github.com/kisinga/AOC/2022/day01"
+)
+
 type runner interface {
 	Run()
 }
@@ -74,5 +78,14 @@ func NewSolutions() solutions {
 }
 
 func main() {
+
 	solution := NewSolutions()
+	//get out cli args
+	args := ""
+	switch args {
+	case "01":
+		solution.day01.Run()
+
+	}
+
 }
