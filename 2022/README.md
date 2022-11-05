@@ -1,4 +1,4 @@
-package main is the entry point for all our solutions  
+main.go is the entry point for all our solutions  
 All the code in this file is honestly unecessary, as I could have easily run the solutions independently, but it comes with some advantages too
 1. Standardization of the function calls
 2. I don't have to cd into a different folder every time I want to run a different solution
