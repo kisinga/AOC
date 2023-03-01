@@ -1,4 +1,4 @@
-package day01
+package day02
 
 import (
 	"fmt"
@@ -23,8 +23,8 @@ func (*day) solve() {
 func Runner() *cobra.Command {
 	var d *day
 	cmd := &cobra.Command{
-		Use:   "1",
-		Short: "Day 1 solution",
+		Use:   "2",
+		Short: "Day 2 solution",
 		PreRun: func(cmd *cobra.Command, args []string) {
 			d = prepare()
 		},
