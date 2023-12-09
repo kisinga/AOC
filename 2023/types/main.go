@@ -1,5 +1,5 @@
 package types
 
-type Day interface {
+type Challenge interface {
 	Solve() error
 }
