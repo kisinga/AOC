@@ -9,16 +9,41 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var numberMap = map[string]int{
-	"one":   1,
-	"two":   2,
-	"three": 3,
-	"four":  4,
-	"five":  5,
-	"six":   6,
-	"seven": 7,
-	"eight": 8,
-	"nine":  9,
+var numberDict = map[string]int{
+	"one":         1,
+	"two":         2,
+	"three":       3,
+	"four":        4,
+	"five":        5,
+	"six":         6,
+	"seven":       7,
+	"eight":       8,
+	"nine":        9,
+	"ten":         10,
+	"eleven":      11,
+	"twelve":      12,
+	"thirteen":    13,
+	"fourteen":    14,
+	"fifteen":     15,
+	"sixteen":     16,
+	"seventeen":   17,
+	"eighteen":    18,
+	"nineteen":    19,
+	"twenty":      20,
+	"thirty":      30,
+	"forty":       40,
+	"fifty":       50,
+	"sixty":       60,
+	"seventy":     70,
+	"eighty":      80,
+	"ninety":      90,
+	"hundred":     100,
+	"thousand":    1000,
+	"million":     1000000,
+	"billion":     1000000000,
+	"trillion":    1000000000000,
+	"quadrillion": 1000000000000000,
+	"quintillion": 1000000000000000000,
 }
 
 type day struct {
@@ -80,9 +105,8 @@ func (d *day) Solve() error {
 		twoDigits = make([]int, 0, 2)
 
 		// get the numbers contained in the string
-		wordIndexes := numberWordsContainedInString(line)
 
-		digitIndexes := new(numberWordsContainedInStringMap)
+		indexStore := new(numberWordsContainedInStringMap)
 
 		for index, s := range line {
 			if isNumber(s) {
@@ -90,81 +114,63 @@ func (d *day) Solve() error {
 				if len(twoDigits) == 2 {
 					twoDigits = twoDigits[0:1]
 				}
-				if digitIndexes.smallestIndex != nil {
-					digitIndexes.smallestIndex = &containedNumber{
-						index: index,
-						value: digit,
-					}
-				} else if digitIndexes.largestIndex != nil {
-					digitIndexes.largestIndex = &containedNumber{
-						index: index,
-						value: digit,
-					}
-				} else {
-					if digitIndexes.largestIndex == nil {
-						digitIndexes.largestIndex = &containedNumber{
-							index: index,
-							value: digit,
-						}
-					} else if index > digitIndexes.largestIndex.index {
-						digitIndexes.largestIndex.index = digit
-					}
+				if indexStore.smallestIndex == nil || index < indexStore.smallestIndex.index {
+					indexStore.smallestIndex = &containedNumber{index: index, value: digit}
 				}
-			}
-			if wordIndexes.smallestIndex != nil && digitIndexes.smallestIndex != nil {
-				if wordIndexes.smallestIndex.index < digitIndexes.smallestIndex.index {
-					twoDigits = append(twoDigits, wordIndexes.smallestIndex.value)
+
+				if indexStore.largestIndex == nil || index > indexStore.largestIndex.index {
+					indexStore.largestIndex = &containedNumber{index: index, value: digit}
 				}
-			} else if wordIndexes.smallestIndex != nil {
-				twoDigits = append(twoDigits, wordIndexes.smallestIndex.value)
-			} else if digitIndexes.smallestIndex != nil {
-				twoDigits = append(twoDigits, digitIndexes.smallestIndex.value)
 			}
 
-			if wordIndexes.largestIndex != nil && digitIndexes.largestIndex != nil {
-				if wordIndexes.largestIndex.index > digitIndexes.largestIndex.index {
-					twoDigits = append(twoDigits, wordIndexes.largestIndex.value)
-				}
-			} else if wordIndexes.largestIndex != nil {
-				twoDigits = append(twoDigits, wordIndexes.largestIndex.value)
-			} else if digitIndexes.largestIndex != nil {
-				twoDigits = append(twoDigits, digitIndexes.largestIndex.value)
+			if len(line) == index+1 {
+				indexStore = compareIndexesWithDictIndexes(line, *indexStore)
+
+				twoDigits = []int{indexStore.smallestIndex.value, indexStore.largestIndex.value}
+
+				lineDigits := combineDigits(twoDigits[0], twoDigits[1])
+
+				d.answer.part2 += lineDigits
+				fmt.Println(lineDigits, d.answer)
 			}
+
 		}
 
 	}
 	return nil
 }
 
-func numberWordsContainedInString(s string) numberWordsContainedInStringMap {
-	var numbersContained numberWordsContainedInStringMap
-	for key, v := range numberMap {
-		index := strings.Index(s, key)
-		if index != -1 {
-			if numbersContained.smallestIndex == nil {
-				numbersContained.smallestIndex = &containedNumber{
-					index: index,
-					value: v,
-				}
-			} else if numbersContained.largestIndex == nil {
-				numbersContained.largestIndex = &containedNumber{
-					index: index,
-					value: v,
-				}
-			} else {
-				if numbersContained.largestIndex != nil {
-					numbersContained.largestIndex = &containedNumber{
-						index: index,
-						value: v,
-					}
-				} else if index > numbersContained.largestIndex.index {
-					numbersContained.largestIndex.index = index
+func ensureSingleDigit(digit int) int {
+	if digit > 9 {
+		return digit % 10
+	}
+	return digit
+}
+
+func compareIndexesWithDictIndexes(s string, indexStore numberWordsContainedInStringMap) *numberWordsContainedInStringMap {
+	for key, v := range numberDict {
+		lastIndex := strings.LastIndex(s, key)
+		firstIndex := strings.Index(s, key)
+
+		if firstIndex != -1 {
+			if indexStore.smallestIndex == nil || firstIndex < indexStore.smallestIndex.index {
+				indexStore.smallestIndex = &containedNumber{
+					index: firstIndex,
+					value: ensureSingleDigit(v),
 				}
 			}
+		}
 
+		if lastIndex != -1 {
+			if indexStore.largestIndex == nil || lastIndex > indexStore.largestIndex.index {
+				indexStore.largestIndex = &containedNumber{
+					index: lastIndex,
+					value: ensureSingleDigit(v),
+				}
+			}
 		}
 	}
-	return numbersContained
+	return &indexStore
 }
 
 // since we're only dealing with two digits, we can just use this shortcut
