@@ -5,12 +5,20 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch day 1",
+            "name": "Launch day x",
             "type": "go",
             "request": "launch",
             "mode": "debug",
             "program": "${workspaceFolder}/2023/main.go",
-            "args": ["1"]
+            "args": ["2"]
+          },
+          {
+            "name": "Launch playground",
+            "type": "go",
+            "request": "launch",
+            "mode": "debug",
+            "program": "${workspaceFolder}/2023/main.go",
+            "args": ["p"]
           },
     ]
 }

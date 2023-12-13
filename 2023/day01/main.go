@@ -71,7 +71,7 @@ func (d *day) Solve() error {
 	if err != nil {
 		return err
 	}
-
+	defer file.Close()
 	// Create a scanner to read the file line by line
 	scanner := bufio.NewScanner(file)
 	// Iterate through each line

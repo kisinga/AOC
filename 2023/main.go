@@ -5,6 +5,9 @@ import (
 	"os"
 
 	"github.com/kisinga/AOC/2023/day01"
+	"github.com/kisinga/AOC/2023/day02"
+	"github.com/kisinga/AOC/2023/playground"
+
 	"github.com/spf13/cobra"
 )
 
@@ -17,7 +20,10 @@ func main() {
 		},
 	}
 
+	rootCmd.AddCommand(playground.Run())
+
 	rootCmd.AddCommand(day01.Run())
+	rootCmd.AddCommand(day02.Run())
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
