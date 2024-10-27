@@ -15,5 +15,8 @@ public class Logger {
 }
 
 public protocol Solution {
-    func solve(filePath: String, logger: Logger)
+    var filePath: String? { get }
+    var logger: Logger { get }
+
+    func solve() throws -> Int
 }

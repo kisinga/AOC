@@ -2,8 +2,17 @@
 
 import types
 
-private class Day1: Solution{
-    public func solve(filePath: String, logger: Logger) {
-        logger.log("Solving day 1")
+class Day1: types.Solution {
+    let filePath: String?
+    let logger: Logger
+
+    init(filePath: String?, logger: Logger) {
+        self.filePath = filePath
+        self.logger = logger
+    }
+
+    func solve() throws -> Int {
+        self.logger.log("Solving day 1")
+        return 0
     }
 }

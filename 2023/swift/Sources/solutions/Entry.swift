@@ -13,8 +13,13 @@ public class Solution {
         self.logger = logger
     }
 
-
     public func run() {
-
+        switch day {
+        case 1:
+            let day1 = Day1(filePath: folder, logger: logger)
+            let res = try? day1.solve()
+        default:
+            logger.log("Day \(day) not implemented")
+        }
     }
 }
