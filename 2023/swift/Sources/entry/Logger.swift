@@ -14,4 +14,8 @@ class ConsoleLogger: Logger {
             print(message)
         }
     }
+
+    func forceLog(_ message: String) {
+        print(message)
+    }
 }

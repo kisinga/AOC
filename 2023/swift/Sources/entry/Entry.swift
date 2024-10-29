@@ -4,7 +4,7 @@ import ArgumentParser
 import Solutions
 
 @main
-struct AOC: ParsableCommand {
+struct AOC: AsyncParsableCommand {
 
     @Flag(name: .shortAndLong)
     var verbose = false
@@ -12,15 +12,19 @@ struct AOC: ParsableCommand {
     @Argument(help: "The day for which to run the solution")
     var day: Int
 
-    @Option(help: "The folder containing the source data")
+    @Option(help: "The absolute folder path containing the source data")
     var folder: String?
 
-    func run() throws {
+    func run() async throws {
         let logger = ConsoleLogger(verbose: verbose)
         let solution = Solution(day: self.day, logger: logger, folder: self.folder)
         logger.log("Running day \(day) with folder \(folder ?? "nil")")
 
-        solution.solve()
-
+        do {
+            let result = try await solution.solve()
+            logger.forceLog("Result: \(result)")
+        } catch (let error) {
+            logger.log("Error: \(error)")
+        }
     }
 }
