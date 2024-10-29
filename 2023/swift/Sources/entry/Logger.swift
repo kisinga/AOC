@@ -1,0 +1,17 @@
+// swift-tools-version: 6.0
+
+import Solutions
+
+class ConsoleLogger: Logger {
+    let verbose: Bool
+
+    init(verbose: Bool) {
+        self.verbose = verbose
+    }
+
+    func log(_ message: String) {
+        if verbose {
+            print(message)
+        }
+    }
+}

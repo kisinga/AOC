@@ -1,0 +1,24 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "swift",
+			"args": [
+				"build",
+				"--product",
+				"aoc",
+				"-Xswiftc",
+				"-diagnostic-style=llvm"
+			],
+			"env": {},
+			"cwd": "/home/kamana/Documents/Code/AOC/2023/swift",
+			"disableTaskQueue": true,
+			"dontTriggerTestDiscovery": true,
+			"showBuildStatus": "swiftStatus",
+			"group": "build",
+			"problemMatcher": [],
+			"label": "swift: Build Debug aoc (2023/swift)",
+			"detail": "swift build --product aoc -Xswiftc -diagnostic-style=llvm"
+		}
+	]
+}

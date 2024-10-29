@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "aoc",
+
     dependencies: [
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.0.0")
     ],
@@ -13,17 +14,13 @@ let package = Package(
             name: "aoc",
             dependencies: [
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
-                "solutions",
-                "types",
+                "Solutions",
             ],
             path: "Sources/entry"
         ),
         .target(
-            name: "solutions",
-            dependencies: ["types"]
-        ),
-        .target(
-            name: "types"
+            name: "Solutions",
+            path: "Sources/solutions"
         ),
     ]
 )

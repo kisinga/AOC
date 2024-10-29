@@ -1,9 +1,10 @@
+// swift-tools-version: 6.0
+
 import ArgumentParser
-import solutions
-import types
+import Solutions
 
 @main
-struct Repeat: ParsableCommand {
+struct AOC: ParsableCommand {
 
     @Flag(name: .shortAndLong)
     var verbose = false
@@ -14,14 +15,12 @@ struct Repeat: ParsableCommand {
     @Option(help: "The folder containing the source data")
     var folder: String?
 
-
-
     func run() throws {
-        let logger = Logger(verbose: self.verbose)
-        let solution = Solution(day: self.day,  logger: logger, folder: self.folder)
+        let logger = ConsoleLogger(verbose: verbose)
+        let solution = Solution(day: self.day, logger: logger, folder: self.folder)
         logger.log("Running day \(day) with folder \(folder ?? "nil")")
 
-        solution.run()
+        solution.solve()
 
     }
 }
