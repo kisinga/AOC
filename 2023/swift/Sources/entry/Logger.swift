@@ -8,7 +8,9 @@ class ConsoleLogger: Logger {
     init(verbose: Bool) {
         self.verbose = verbose
     }
+}
 
+extension ConsoleLogger {
     func log(_ message: String) {
         if verbose {
             print(message)
