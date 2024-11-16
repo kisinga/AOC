@@ -9,17 +9,10 @@ import Utils
     case invalidPart
 }
 
-class Day1: Solvable {
+struct Day1: Solvable {
     var filePath: String
     let logger: Logger
     let part: Int
-
-    init(part: Int, filePath: String, logger: Logger) {
-        self.filePath = filePath
-        self.logger = logger
-        self.part = part
-    }
-
 }
 
 extension Day1 {
