@@ -19,11 +19,11 @@ public class Solution {
 
     public func solve() async throws -> Int {
         if let folder {
-            logger.log("Using folder \(folder)")
+            logger.log(.info("Using folder \(folder)"))
 
         } else {
             let cwd = FileManager.default.currentDirectoryPath
-            logger.log("No file path provided, using current directory \(cwd)")
+            logger.log(.warn("No file path provided, using current directory \(cwd)"))
             folder = cwd
         }
 
@@ -32,8 +32,12 @@ public class Solution {
             let day1 = Day1(
                 filePath: folder! + "/challenges/day1.data.txt", logger: logger, part: part)
             return try await day1.solve()
+        case 2:
+            let day2 = Day2(
+                filePath: folder! + "/challenges/day2.data.txt", logger: logger, part: part)
+            return try await day2.solve()
         default:
-            logger.log("Day \(day) not implemented")
+            logger.log(.error("Day \(day) not implemented"))
             return 1
         }
 

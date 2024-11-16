@@ -24,11 +24,13 @@ class DayX: Solvable {
 
 extension DayX {
     func solve() async throws -> Int {
-        self.logger.log("Solving day 1 Part \(part)")
+        self.logger.log(.info("Solving day 1 Part \(part)"))
         switch part {
         case 1:
             var sum = 0
+            for try await line in FileReader.lines(from: filePath) {
 
+            }
             return sum
 
         case 2:
