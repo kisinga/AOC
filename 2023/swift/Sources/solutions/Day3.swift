@@ -31,12 +31,14 @@ class LineProcessor {
         if current.isEmpty {
             values[1] = value
         } else if previous.isEmpty {
-            values.removeFirst()
+            // /shift values to the left
+            values[0] = values[1]
             values[1] = value
         } else if next.isEmpty {
             values[2] = value
         } else {
-            values.removeFirst()
+            values[0] = values[1]
+            values[1] = values[2]
             values[2] = value
         }
         return 0
