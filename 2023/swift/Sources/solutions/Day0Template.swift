@@ -9,22 +9,14 @@ import Utils
     case invalidPart
 }
 
-class DayX: Solvable {
+struct DayX: Solvable {
     var filePath: String
     let logger: Logger
     let part: Int
-
-    init(part: Int, filePath: String, logger: Logger) {
-        self.filePath = filePath
-        self.logger = logger
-        self.part = part
-    }
-
 }
 
 extension DayX {
     func solve() async throws -> Int {
-        self.logger.log(.info("Solving day 1 Part \(part)"))
         switch part {
         case 1:
             var sum = 0

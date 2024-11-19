@@ -20,10 +20,11 @@ enum Colors {
     case blue(_ value: Int)
     case green(_ value: Int)
 }
+
 struct Game {
-    var red: Int
-    var green: Int
-    var blue: Int
+    var red: Int?
+    var green: Int?
+    var blue: Int?
 
     init(red: Int, green: Int, blue: Int) {
         self.red = red
@@ -31,15 +32,7 @@ struct Game {
         self.green = green
     }
 
-    func toColors() -> [Colors] {
-        [
-            .red(red),
-            .blue(blue),
-            .green(green),
-        ]
-    }
-
-    subscript(color: String) -> Int {
+    subscript(color: String) -> Int? {
         get {
             switch color.lowercased() {
             case "red":
@@ -75,25 +68,24 @@ extension Day2 {
         case 1:
             let constraint = Game(red: 12, green: 13, blue: 14)
             var sum = 0
+            let pattern = /(\d+)\s+(blue|red|green)/
             for try await line in FileReader.lines(from: filePath) {
-                let pattern = /(\d+)\s+(blue|red|green)/
                 // Let's extract all matches
                 var impossible = false
+                let id: Int = Int(line.firstMatch(of: /Game (\d+):/)?.1 ?? "0")!
                 let matches = line.matches(of: pattern)
                 for match in matches {
                     let count = Int(match.1)!
                     let color = match.2
 
-                    if count > constraint[String(color)] {
+                    if count > constraint[String(color)] ?? 0 {
                         impossible = true
                     }
                 }
                 if !impossible {
-                    let id: Int = Int(line.firstMatch(of: /Game (\d+):/)?.1 ?? "0")!
                     logger.log(.debug("Game \(id) possible"))
                     sum += id
                 } else {
-                    let id: Int = Int(line.firstMatch(of: /Game (\d+):/)?.1 ?? "0")!
                     logger.log(.warn("Game \(id) IMPOSSIBLE"))
                 }
 
@@ -101,9 +93,35 @@ extension Day2 {
             return sum
 
         case 2:
-            var sum = 0
+            var powersTotal = 0
+            let pattern = /(\d+)\s+(blue|red|green)/
+            var biggestValues = Game(red: 0, green: 0, blue: 0)
 
-            return sum
+            for try await line in FileReader.lines(from: filePath) {
+                let subsets = line.split(separator: ";")
+                for sett in subsets {
+                    let matches = sett.matches(of: pattern)
+                    for match in matches {
+                        let value = Int(match.1)!
+                        let color = match.2
+                        if biggestValues[String(color)]! < value {
+                            biggestValues[String(color)] = value
+                        }
+                    }    
+                }
+
+                let id: Int = Int(line.firstMatch(of: /Game (\d+):/)?.1 ?? "0")!
+                logger.log(
+                    .debug(
+                        "Game \(id) Total \(biggestValues.red ?? 1 ) * \(biggestValues.green ?? 1) * \(biggestValues.blue ?? 1))"
+                    ))
+                powersTotal +=
+                    (biggestValues.red ?? 1) * (biggestValues.green ?? 1)
+                    * (biggestValues.blue ?? 1)
+                biggestValues = Game(red: 0, green: 0, blue: 0)
+            }
+
+            return powersTotal
         default:
             preconditionFailure("Invalid part")
         }

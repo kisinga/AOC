@@ -27,38 +27,23 @@
     {
       "type": "lldb",
       "request": "launch",
-      "args": [],
+      "args": [
+        "--day=3", 
+       "--part=1"
+      ],
       "cwd": "${workspaceFolder:AOC}/2023/swift",
-      "name": "Debug AOC (2023/swift)",
-      "program": "${workspaceFolder:AOC}/2023/swift/.build/debug/AOC",
-      "preLaunchTask": "swift: Build Debug AOC (2023/swift)"
-    },
-    {
-      "type": "lldb",
-      "request": "launch",
-      "args": [],
-      "cwd": "${workspaceFolder:AOC}/2023/swift",
-      "name": "Release AOC (2023/swift)",
-      "program": "${workspaceFolder:AOC}/2023/swift/.build/release/AOC",
-      "preLaunchTask": "swift: Build Release AOC (2023/swift)"
-    },
-    {
-      "type": "lldb",
-      "request": "launch",
-      "args": [],
-      "cwd": "${workspaceFolder:AOC}/2023/swift",
-      "name": "Debug aoc (2023/swift)",
+      "name": "Debug AOC",
       "program": "${workspaceFolder:AOC}/2023/swift/.build/debug/aoc",
-      "preLaunchTask": "swift: Build Debug aoc (2023/swift)"
+      "preLaunchTask": "swift: Build Debug AOC"
     },
     {
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "${workspaceFolder:AOC}/2023/swift",
-      "name": "Release aoc (2023/swift)",
-      "program": "${workspaceFolder:AOC}/2023/swift/.build/release/aoc",
-      "preLaunchTask": "swift: Build Release aoc (2023/swift)"
+      "cwd": "${workspaceFolder}/2023/swift",
+      "name": "Release AOC",
+      "program": "${workspaceFolder}/2023/swift/.build/release/aoc",
+      "preLaunchTask": "swift: Build Release AOC"
     }
   ]
 }

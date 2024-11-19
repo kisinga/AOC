@@ -30,11 +30,15 @@ public class Solution {
         switch day {
         case 1:
             let day1 = Day1(
-                filePath: folder! + "/challenges/day1.data.txt", logger: logger, part: part)
+                filePath: folder! + "/data/day1.txt", logger: logger, part: part)
             return try await day1.solve()
         case 2:
             let day2 = Day2(
-                filePath: folder! + "/challenges/day2.data.txt", logger: logger, part: part)
+                filePath: folder! + "/data/day2.txt", logger: logger, part: part)
+            return try await day2.solve()
+        case 3:
+            let day2 = Day3(
+                filePath: folder! + "/data/day3.txt", logger: logger, part: part)
             return try await day2.solve()
         default:
             logger.log(.error("Day \(day) not implemented"))

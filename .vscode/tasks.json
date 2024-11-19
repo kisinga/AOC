@@ -17,7 +17,7 @@
 			"showBuildStatus": "swiftStatus",
 			"group": "build",
 			"problemMatcher": [],
-			"label": "swift: Build Debug aoc (2023/swift)",
+			"label": "swift: Build Debug AOC",
 			"detail": "swift build --product aoc -Xswiftc -diagnostic-style=llvm"
 		}
 	]

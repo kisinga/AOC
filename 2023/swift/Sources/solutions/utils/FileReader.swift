@@ -71,4 +71,48 @@ struct FileReader {
             }
         }
     }
+
+    static func lineSequence(path: String) throws -> some Sequence<String> {
+        guard let fileHandle = FileHandle(forReadingAtPath: path) else {
+            throw FileReadError.fileNotFound
+        }
+        let buffer = Data()
+        let chunkSize = 64 * 1024
+
+        return sequence(state: buffer) { buffer in
+            defer {
+                if buffer.isEmpty {
+                    try? fileHandle.close()
+                }
+            }
+
+            while !buffer.contains(0x0A) {
+                let data: Data
+                do {
+                    guard let chunk = try fileHandle.read(upToCount: chunkSize),
+                        !chunk.isEmpty
+                    else {
+                        if !buffer.isEmpty {
+                            let remainingData = buffer
+                            buffer.removeAll()
+                            return String(data: remainingData, encoding: .utf8)
+                        }
+                        return nil
+                    }
+                    data = chunk
+                } catch {
+                    return nil  // Or handle error as needed
+                }
+                buffer.append(data)
+            }
+
+            if let newlineRange = buffer.range(of: Data([0x0A])) {
+                let lineData = buffer.subdata(in: 0..<newlineRange.lowerBound)
+                buffer.removeSubrange(0...newlineRange.upperBound - 1)
+                return String(data: lineData, encoding: .utf8)
+            }
+
+            return nil
+        }
+    }
 }
