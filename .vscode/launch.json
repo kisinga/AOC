@@ -23,38 +23,58 @@
     {
       "type": "lldb",
       "request": "launch",
-      "args": ["--day=3", "--part=1"],
+      "args": ["--day=${input:day}", "--part=${input:part}"],
       "cwd": "${workspaceFolder:AOC}/2023/swift",
       "name": "Debug AOC",
       "program": "${workspaceFolder:AOC}/2023/swift/.build/debug/aoc",
       "preLaunchTask": "swift: Build Debug AOC"
+    }
+  ],
+  "inputs": [
+    {
+      "id": "day",
+      "type": "pickString",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21",
+        "22",
+        "23",
+        "24",
+        "25",
+        "26",
+        "27",
+        "28",
+        "29",
+        "30"
+      ],
+      "description": "Choose Day",
+      "default": ""
     },
     {
-      "type": "lldb",
-      "request": "launch",
-      "args": [],
-      "cwd": "${workspaceFolder}/2023/swift",
-      "name": "Release AOC",
-      "program": "${workspaceFolder}/2023/swift/.build/release/aoc",
-      "preLaunchTask": "swift: Build Release AOC"
-    },
-    {
-      "type": "lldb",
-      "request": "launch",
-      "args": [],
-      "cwd": "${workspaceFolder:AOC}/2023/swift",
-      "name": "Debug aoc (2023/swift)",
-      "program": "${workspaceFolder:AOC}/2023/swift/.build/debug/aoc",
-      "preLaunchTask": "swift: Build Debug aoc (2023/swift)"
-    },
-    {
-      "type": "lldb",
-      "request": "launch",
-      "args": [],
-      "cwd": "${workspaceFolder:AOC}/2023/swift",
-      "name": "Release aoc (2023/swift)",
-      "program": "${workspaceFolder:AOC}/2023/swift/.build/release/aoc",
-      "preLaunchTask": "swift: Build Release aoc (2023/swift)"
+      "id": "part",
+      "type": "pickString",
+      "description": "Choose Part",
+      "options": ["1", "2"],
+      "default": ""
     }
   ]
 }
