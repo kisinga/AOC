@@ -15,65 +15,155 @@ struct Day3: Solvable {
     let part: Int
 }
 
-struct NumberCluser {
-    let digits: String
-    let startPosition: Int
-    let length: Int
+struct NumberCluster {
+    let digits: [Character]
+    let startIndex: Int
 }
 
-class LineProcessor {
-    private var values: [String]
-    init() {
-        self.values = Array(repeating: "", count: 3)
+extension Character {
+    var isCustomSymbol: Bool {
+        return !self.isLetter && !self.isNumber && self != "."
     }
+}
 
-    func process(_ value: String) -> Int? {
-        if current.isEmpty {
-            values[1] = value
-        } else if previous.isEmpty {
-            // /shift values to the left
-            values[0] = values[1]
-            values[1] = value
-        } else if next.isEmpty {
-            values[2] = value
-        } else {
-            values[0] = values[1]
-            values[1] = values[2]
-            values[2] = value
+func findDigitClusters(in chars: [Character]) -> [NumberCluster] {
+    var clusters: [NumberCluster] = []
+    var currentDigits: [Character] = []
+    var currentStart: Int?
+
+    for (index, char) in chars.enumerated() {
+        if char.isNumber {
+            if currentStart == nil {
+                currentStart = index
+            }
+            currentDigits.append(char)
+        } else if let start = currentStart {
+            clusters.append(NumberCluster(digits: currentDigits, startIndex: start))
+            currentDigits = []
+            currentStart = nil
         }
-        return 0
     }
 
-    private var current: String {
-        return values[1]
+    if let start = currentStart {
+        clusters.append(NumberCluster(digits: currentDigits, startIndex: start))
     }
 
-    private var previous: String {
-        return values[0]
+    return clusters
+}
+
+struct Buffer {
+    private var first: [Character] = []
+    private var second: [Character] = []
+    private var third: [Character] = []
+
+    mutating func add(value: [Character]) {
+        if full {
+            first = second
+            second = third
+            third = value
+        } else {
+            if first.count == 0 {
+                first = value
+            } else if second.count == 0 {
+                second = value
+            } else {
+                third = value
+            }
+        }
     }
 
-    private var next: String {
-        return values[2]
+    init() {
+    }
+
+    var full: Bool {
+        return first.count > 0 && second.count > 0 && third.count > 0
     }
 }
 
-func findDigitClusters(in text: String) -> [NumberCluser] {
-    var results: [NumberCluser] = []
+extension Buffer {
+    func checkFirstLine() -> Int {
+        var sum = 0
 
-    for match in text.matches(of: /\d+/) {
-        let digits = String(match.0)
-        let startPosition = text.distance(from: text.startIndex, to: match.startIndex)
-        let length = digits.count
+        for cluster in findDigitClusters(in: first) {
+            /// check left
+            if cluster.startIndex > 0 {
+                if first[cluster.startIndex].isCustomSymbol {
+                    if let number = Int(String(cluster.digits)) {
+                        sum += number
+                        continue
+                    }
+                }
+            }
 
-        results.append(
-            NumberCluser(
-                digits: digits,
-                startPosition: startPosition,
-                length: length
-            ))
+            /// check right
+            if cluster.startIndex + cluster.digits.count + 1 < first.count {
+                if first[cluster.startIndex + cluster.digits.count].isCustomSymbol {
+                    if let number = Int(String(cluster.digits)) {
+                        sum += number
+                        continue
+                    }
+                }
+            }
+
+            // check below
+            let belowSubset: ArraySlice<Character>
+            if cluster.startIndex > 0 {
+                belowSubset =
+                    second[cluster.startIndex - 1...cluster.startIndex + cluster.digits.count]
+            } else {
+                if cluster.startIndex + cluster.digits.count + 1 < second.count {
+                    belowSubset =
+                        second[cluster.startIndex...cluster.startIndex + cluster.digits.count + 1]
+                } else {
+                    belowSubset =
+                        second[cluster.startIndex...cluster.startIndex + cluster.digits.count]
+                }
+            }
+
+            for char in belowSubset {
+                if char.isCustomSymbol {
+                    if let number = Int(String(cluster.digits)) {
+                        sum += number
+                        break
+                    }
+                }
+            }
+
+        }
+        return sum
     }
 
-    return results
+    func checkSecondLine() -> Int {
+        var sum = 0
+
+        return sum
+    }
+
+    func checkLastLIne() -> Int {
+        var sum = 0
+
+        return sum
+    }
+}
+
+enum CounterPosition {
+    case first
+    case other
+    case last
+}
+
+extension Buffer {
+    func process(counterPosition: CounterPosition) -> [Int] {
+        switch counterPosition {
+        case .first:
+            break
+        case .other:
+            break
+        case .last:
+            break
+        }
+        return []
+    }
 }
 
 extension Day3 {
@@ -81,14 +171,25 @@ extension Day3 {
         switch part {
         case 1:
             var sum = 0
-            var processor = LineProcessor()
+            var buffer = Buffer()
 
-            for line in try FileReader.lineSequence(path: filePath) {
-                let result = processor.process(line)
-                logger.log(.debug("buffer \(result)"))
-                // let clusters = findDigitClusters(in: line)
-
+            for (counter, line) in try FileReader.lineSequence(path: filePath).enumerated() {
+                // let result = processor.process(line)
+                buffer.add(value: Array(line))
+                // some efficiency from switch
+                switch (counter, buffer.full) {
+                case (..<3, true):
+                    // process the first 3 lines
+                    sum += buffer.checkFirstLine()
+                    sum += buffer.checkSecondLine()
+                case (_, true):
+                    sum += buffer.checkSecondLine()
+                default:
+                    break
+                }
             }
+            // when all is over, check last line
+            sum += buffer.checkLastLIne()
             return sum
 
         case 2:

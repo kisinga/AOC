@@ -5,12 +5,12 @@ public protocol Solvable {
 
 public protocol Logger {
     /// Log a message if verbose is enabled
-    func log(_ level: Level)
+    func log(_ level: LogLevel)
     /// Log a message regardless of verbose
     func forceLog(_ message: String)
 }
 
-@frozen public enum Level {
+@frozen public enum LogLevel {
     case info(_ message: String)
     case warn(_ message: String)
     case error(_ message: String)

@@ -24,7 +24,7 @@ struct Colors {
 }
 
 extension ConsoleLogger {
-    func log(_ level: Level) {
+    func log(_ level: LogLevel) {
         switch level {
         case let .debug(message):
             if debug {

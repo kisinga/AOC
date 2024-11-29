@@ -72,12 +72,14 @@ struct FileReader {
         }
     }
 
-    static func lineSequence(path: String) throws -> some Sequence<String> {
+    static func lineSequence(path: String) throws -> some Sequence<[Character]> {
         guard let fileHandle = FileHandle(forReadingAtPath: path) else {
             throw FileReadError.fileNotFound
         }
-        let buffer = Data()
+
+        var buffer = Data()
         let chunkSize = 64 * 1024
+        let newline: UInt8 = 0x0A
 
         return sequence(state: buffer) { buffer in
             defer {
@@ -86,30 +88,38 @@ struct FileReader {
                 }
             }
 
-            while !buffer.contains(0x0A) {
-                let data: Data
+            while !buffer.contains(newline) {
                 do {
                     guard let chunk = try fileHandle.read(upToCount: chunkSize),
                         !chunk.isEmpty
                     else {
                         if !buffer.isEmpty {
-                            let remainingData = buffer
+                            let chars = buffer.map { byte -> Character in
+                                guard byte <= 127 else {
+                                    preconditionFailure(
+                                        "Found non-ascii character! \nThis reader only works with ASCII to return a Character Array!"
+                                    )
+                                }
+                                return Character(UnicodeScalar(byte))
+                            }
                             buffer.removeAll()
-                            return String(data: remainingData, encoding: .utf8)
+                            return chars
                         }
                         return nil
                     }
-                    data = chunk
+                    buffer.append(chunk)
                 } catch {
-                    return nil  // Or handle error as needed
+                    return nil
                 }
-                buffer.append(data)
             }
 
-            if let newlineRange = buffer.range(of: Data([0x0A])) {
-                let lineData = buffer.subdata(in: 0..<newlineRange.lowerBound)
-                buffer.removeSubrange(0...newlineRange.upperBound - 1)
-                return String(data: lineData, encoding: .utf8)
+            if let newlineIndex = buffer.firstIndex(of: newline) {
+                let chars = buffer[..<newlineIndex].compactMap { byte -> Character? in
+                    guard byte <= 127 else { return nil }
+                    return Character(UnicodeScalar(byte))
+                }
+                buffer.removeSubrange(0...newlineIndex)
+                return chars
             }
 
             return nil
